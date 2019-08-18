@@ -12,7 +12,7 @@ public class Article implements Serializable {
 
     private int id;
 
-    @JsonIgnore
+//    @JsonIgnore返回JSON忽视该字段
     private String title;
 
     private String content;

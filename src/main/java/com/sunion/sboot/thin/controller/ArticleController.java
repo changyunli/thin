@@ -4,6 +4,7 @@ import com.sunion.sboot.thin.domain.Article;
 import com.sunion.sboot.thin.domain.Resource;
 import com.sunion.sboot.thin.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,29 @@ public class ArticleController {
     @Autowired
     private Resource resource;
 
+//    注入redis
+    @javax.annotation.Resource
+    private RedisTemplate<String,Object> redisTemplate;
+    /**
+     * 测试redis是否链接成功
+     * **/
+    @RequestMapping("/redisArticle/{id}")
+    @ResponseBody
+    public Article redisArticle(@PathVariable("id")int id){
+
+        redisTemplate.opsForValue().set("id",id);
+        redisTemplate.opsForValue().set("title","人");
+        redisTemplate.opsForValue().set("content","我是中国人");
+
+        Article article=new Article();
+        int ids=(int)redisTemplate.opsForValue().get("id");
+        article.setId(ids);
+        article.setTitle(redisTemplate.opsForValue().get("title").toString());
+        article.setContent(redisTemplate.opsForValue().get("content").toString());
+
+        System.out.println(article);
+        return article;
+    }
     /**
      * 测试mybatis与springboot
      * **/
